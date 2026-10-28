@@ -2,13 +2,21 @@
 
 An interactive GIS web application for exploring driving routes in Bonn, Germany. Users can select an origin and destination directly on an interactive map, calculate the shortest-distance driving route, and compare alternative routes.
 
-**[Launch the Live Application](https://gis-remote-sensing-portfolio-husfpsxfrr6klhchenfr2z.streamlit.app/)**
 
 ## Overview
 
 Finding alternative routes between locations is a useful application of GIS network analysis. This project combines OpenStreetMap road network data with graph-based pathfinding algorithms to identify and compare possible driving routes.
 
 The application provides a simple, interactive interface for exploring road connectivity and route alternatives without requiring users to run GIS software locally.
+## Application Preview
+
+Explore alternative driving routes interactively in Bonn, Germany.
+
+![Bonn Interactive Alternative Route Finder displaying alternative driving routes on an interactive map](route-finder-screenshot.png)
+
+**[Launch the Live Application](https://gis-remote-sensing-portfolio-husfpsxfrr6klhchenfr2z.streamlit.app/)**
+
+
 
 ## Features
 
