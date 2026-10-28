@@ -40,13 +40,13 @@ This map examines changes in residential building land in Meckenheim between 201
 
 This map presents the first potential residential development location identified through the multi-criteria suitability analysis. The assessment combines land-use constraints and accessibility requirements to identify an area for further investigation.
 
-![Potential residential development site 1 in Meckenheim](figures/residential-suitability-site-1.png)
+![Potential residential development site 1 in Meckenheim](figures/meckenheim-suitable-location-1.png)
 
 ### 5. Multi-Criteria Residential Development Suitability — Site 2, Meckenheim
 
 This map presents the second potential location identified through the suitability assessment. Together, the two candidate locations demonstrate how GIS-based multi-criteria analysis can support preliminary screening for future residential development.
 
-![Potential residential development site 2 in Meckenheim](figures/residential-suitability-site-2.png)
+![Potential residential development site 2 in Meckenheim](figures/meckenheim-suitable-location-2.png)
 
 ## Approach and Methods
 
