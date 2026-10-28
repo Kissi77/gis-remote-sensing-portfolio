@@ -1,86 +1,68 @@
 # GIS & Remote Sensing Portfolio
 
-**Geospatial Analysis | Satellite Remote Sensing | Environmental Modelling | Spatial Data Science**
+**Geospatial Analysis | Remote Sensing | Spatial Decision Support | Python**
 
-Welcome to my GIS and Remote Sensing portfolio. This repository presents selected projects and research applying geospatial technologies, satellite imagery, spatial analysis, and programming to environmental and urban challenges.
+Welcome to my geospatial portfolio. I am an MSc Geodetic Engineering student at the University of Bonn, Germany, with interests in GIS, satellite remote sensing, spatial modelling, and environmental applications of geospatial technology.
 
-My background is in Geomatic Engineering, with experience in GIS, remote sensing, satellite-image processing, and geospatial analysis. I am interested in using spatial data and analytical methods to understand environmental change, support sustainable development, and inform evidence-based planning.
+This portfolio showcases academic research and practical projects focused on environmental assessment, spatial planning, and geospatial problem-solving.
 
-## Areas of Interest
+## Featured Projects
 
-- Geographic Information Systems (GIS) and spatial analysis
-- Satellite remote sensing and environmental monitoring
-- Land-use and land-cover (LULC) classification
-- Satellite-image preprocessing, image stacking, and image interpretation
-- Land-surface temperature and vegetation analysis
-- GIS-based multi-criteria decision analysis (GIS-MCDA)
-- Environmental assessment and climate-related spatial analysis
-- Machine learning and deep learning for geospatial applications
-- Geospatial data processing, modelling, and visualisation
+### 1. Sustainable and Climate-Resilient Data Centre Site Selection in Germany
+**MSc Thesis Research | University of Bonn**
 
-## Selected Projects
+Developing an expert-informed spatial decision support system to identify suitable areas for sustainable and climate-resilient data-centre development in Germany.
 
-### 1. Environmental Analysis of Data-Centre Developments in Malaysia
+**Key methods:** GIS-based Multi-Criteria Decision Analysis (GIS-MCDA), spatial suitability modelling, expert assessment, criterion weighting, and sensitivity analysis.
 
-A multisite satellite remote-sensing study investigating land-surface temperature, vegetation, and built-up surface changes around data-centre developments in Malaysia.
+**Status:** Ongoing MSc thesis research.
 
-**Key methods and technologies**
-- Google Earth Engine for satellite-data processing
-- Python and R for data analysis and visualisation
-- Land-surface temperature (LST), Normalised Difference Vegetation Index (NDVI), and Normalised Difference Built-up Index (NDBI)
-- Distance-band analysis and pre–post comparisons
-- Cluster-based analysis and Before–After–Control–Impact (BACI) assessment
+[View Thesis Repository](THESIS_REPOSITORY_URL)
 
-[Explore the project](projects/malaysia-data-centre-analysis/README.md)
+### 2. Environmental Impacts of Data-Centre Development in Malaysia
+**ASA Engagement Exchange Research Project**
 
-### 2. Sustainable and Climate-Resilient Data-Centre Siting in Germany
+Investigating land surface temperature, vegetation, and built-up characteristics around data-centre developments using satellite remote sensing and geospatial analysis.
 
-**MSc thesis — in progress**
+**Key methods:** Google Earth Engine, Landsat imagery, LST, NDVI, NDBI, Python, R, distance-based analysis, and impact–control assessment.
 
-A GIS-based multi-criteria decision analysis project exploring how environmental, climatic, and spatial criteria can inform sustainable and climate-resilient data-centre siting in Germany.
+[View Research Repository](MALAYSIA_PROJECT_REPOSITORY_URL)
 
-The planned workflow includes criteria development through literature review, expert validation, Best–Worst Method weighting, GIS data preparation and standardisation, exclusion mapping, weighted-overlay suitability modelling, and sensitivity analysis.
+### 3. Bonn Alternative Route Finder
+**Python | GIS Application Development**
 
-*Project documentation and results will be added as the research progresses and publication permissions are confirmed.*
+An interactive route-planning application for exploring alternative routes and comparing distances through spatial network analysis.
 
-### 3. Urban and Environmental GIS Projects
+**Key methods:** Python, network analysis, route optimisation, and interactive mapping.
 
-Additional projects include spatial suitability analysis, flood-risk assessment, interactive geospatial mapping, distance analysis, and 3D urban visualisation.
+[View Project Repository](BONN_REPOSITORY_URL) · [Open Live Application](LIVE_APP_URL)
 
-Project documentation and selected outputs will be added as they are prepared for sharing.
+### 4. Residential Development Suitability Analysis in Meckenheim, Germany
+**GIS | Spatial Planning**
 
-## Tools & Technologies
+Analysing land-use and forest-area change and identifying potential residential development locations using spatial constraints and accessibility criteria.
 
-**GIS and Remote Sensing:** ArcGIS Pro, QGIS, Google Earth Engine, ERDAS IMAGINE, ESA SNAP
+**Key methods:** Land-use analysis, buffer analysis, accessibility modelling, multi-criteria suitability assessment, and thematic cartography.
 
-**Programming and Data Analysis:** Python, R, MATLAB, Pandas, NumPy, Matplotlib
+[View Project Repository](MECKENHEIM_REPOSITORY_URL)
 
-**Spatial Databases and Web GIS:** PostgreSQL/PostGIS, GeoServer
+## Technical Skills
 
-**Spatial Analysis:** GIS-MCDA, suitability modelling, spatial buffering, distance analysis, environmental assessment, and cartographic visualisation
+- **GIS and spatial analysis:** QGIS, spatial buffers, suitability modelling, accessibility analysis, network analysis, and cartography.
+- **Remote sensing:** Google Earth Engine, satellite image processing, land surface temperature, vegetation and built-up indices, and land-cover analysis.
+- **Programming and statistics:** Python, R, geospatial scripting, statistical analysis, and data visualisation.
+- **Spatial decision support:** GIS-MCDA, criterion standardisation, weighted suitability analysis, and sensitivity analysis.
 
-**Remote-Sensing Methods:** Satellite-image preprocessing, image stacking, LULC classification, vegetation indices, land-surface temperature analysis, and spatial change analysis
+## Education
 
-**Geospatial Visualisation:** Thematic mapping, interactive maps, and 3D urban visualisation
+**MSc in Geodetic Engineering**  
+University of Bonn, Germany
 
-## Developing Research Interests
-
-I am interested in exploring how machine learning and deep learning can support remote sensing and geospatial analysis, particularly in land-use and land-cover classification, satellite-image interpretation, environmental monitoring, and spatial modelling.
-
-My undergraduate work included LULC classification, satellite-image stacking, and image processing using ERDAS IMAGINE. I have also undertaken coursework and learning in machine learning and deep learning and aim to develop practical projects applying these methods to geospatial problems.
-
-## Research Approach
-
-My work focuses on combining spatial data, satellite observations, and quantitative analysis to investigate environmental and urban patterns. I value transparent workflows, clear documentation, appropriate interpretation of results, and acknowledgement of data and methodological limitations.
+Research interests: spatial decision support, sustainable infrastructure planning, climate resilience, environmental remote sensing, and geospatial modelling.
 
 ## Contact
 
-For research collaboration, geospatial projects, or professional opportunities, please connect with me through my professional profile or contact details.
+- **GitHub:** [GitHub Profile](GITHUB_PROFILE_URL)
+- **LinkedIn:** [LinkedIn Profile](LINKEDIN_URL)
+- **Email:** [Contact Me](EMAIL_ADDRESS)
 
-- **GitHub:** [Add your GitHub profile link]
-- **LinkedIn:** [Add your LinkedIn profile link]
-- **Email:** [Add a professional email address if you wish to make it public]
-
----
-
-*This portfolio is a work in progress. Additional projects, methods, and outputs will be added as they are documented and cleared for public sharing.*
