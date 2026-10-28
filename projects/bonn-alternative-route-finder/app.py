@@ -44,7 +44,7 @@ def load_road_network():
         simplify=True,
     )
 
-    graph = ox.add_edge_lengths(graph)
+    graph = ox.distance.add_edge_lengths(graph)
 
     directed_graph = nx.DiGraph()
 
