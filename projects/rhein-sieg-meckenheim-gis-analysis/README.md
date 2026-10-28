@@ -1,6 +1,5 @@
 # GIS-Based Land Use, Forest Change, and Multi-Criteria Residential Development Suitability Analysis in the Rhein-Sieg District and Meckenheim, Germany
-
-**Author:** Emmanuel Frimpong Kissi  
+  
 **Study Area:** Rhein-Sieg District and Meckenheim, North Rhine-Westphalia, Germany  
 **Focus Areas:** GIS · Spatial Analysis · Land-Use Planning · Multi-Criteria Analysis (MCA)
 
@@ -23,31 +22,31 @@ The project combines spatial mapping, change analysis, and **multi-criteria anal
 
 This map illustrates the spatial distribution of land-use and land-cover categories across the Rhein-Sieg District, providing an overview of the area's landscape and land-cover patterns.
 
-![Land-use plan of the Rhein-Sieg District](images/land-use-plan-rhein-sieg.png)
+![Land-use plan of the Rhein-Sieg District](figures/land-use-plan-rhein-sieg.png)
 
 ### 2. Forest-Area Change — Rhein-Sieg District, 1845–2018
 
 This map presents historical changes in forest areas across the Rhein-Sieg District between 1845 and 2018, providing a spatial perspective on long-term landscape transformation.
 
-![Forest-area change in the Rhein-Sieg District, 1845–2018](images/forest-area-change-rhein-sieg-1845-2018.png)
+![Forest-area change in the Rhein-Sieg District, 1845–2018](figures/forest-area-change-rhein-sieg-1845-2018.png)
 
 ### 3. Residential Building Land Change — Meckenheim, 2018–2022
 
 This map examines changes in residential building land in Meckenheim between 2018 and 2022. It illustrates the spatial pattern of change over the study period and provides insight into the evolution of the local built-up environment.
 
-![Residential building land change in Meckenheim, 2018–2022](images/residential-building-land-change-meckenheim-2018-2022.png)
+![Residential building land change in Meckenheim, 2018–2022](figures/residential-building-land-change-meckenheim-2018-2022.png)
 
 ### 4. Multi-Criteria Residential Development Suitability — Site 1, Meckenheim
 
 This map presents the first potential residential development location identified through the multi-criteria suitability analysis. The assessment combines land-use constraints and accessibility requirements to identify an area for further investigation.
 
-![Potential residential development site 1 in Meckenheim](images/residential-suitability-site-1-meckenheim.png)
+![Potential residential development site 1 in Meckenheim](figures/residential-suitability-site-1-meckenheim.png)
 
 ### 5. Multi-Criteria Residential Development Suitability — Site 2, Meckenheim
 
 This map presents the second potential location identified through the suitability assessment. Together, the two candidate locations demonstrate how GIS-based multi-criteria analysis can support preliminary screening for future residential development.
 
-![Potential residential development site 2 in Meckenheim](images/residential-suitability-site-2-meckenheim.png)
+![Potential residential development site 2 in Meckenheim](figures/residential-suitability-site-2-meckenheim.png)
 
 ## Approach and Methods
 
@@ -111,4 +110,3 @@ By integrating environmental constraints and accessibility requirements, the mul
 ---
 
 **Author:** Emmanuel Frimpong Kissi  
-**Project Focus:** Geographic Information Systems, Spatial Analysis, Urban Analytics, and Land-Use Planning
