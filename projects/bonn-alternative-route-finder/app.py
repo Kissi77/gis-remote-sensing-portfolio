@@ -17,7 +17,7 @@ st.set_page_config(
 st.title("Bonn Alternative Route Finder")
 st.write(
     "Select a starting point and destination on the map, "
-    "then compare the shortest driving route with alternatives."
+    "then compare the shortest driving route with two alternatives."
 )
 st.caption(
     "Uses OpenStreetMap road data. Distances are estimates; "
@@ -50,6 +50,7 @@ for key, value in defaults.items():
 
 @st.cache_resource(show_spinner="Loading Bonn's driving network...")
 def load_road_graph():
+    # OSMnx supplies road-edge lengths; no add_edge_lengths call is needed.
     return ox.graph_from_place(
         "Bonn, North Rhine-Westphalia, Germany",
         network_type="drive",
@@ -63,6 +64,7 @@ def load_road_graph():
 
 def nearest_node(graph, point):
     lat, lon = point
+
     return ox.distance.nearest_nodes(
         graph,
         X=lon,
@@ -79,9 +81,7 @@ def get_edge(graph, u, v):
 
     return min(
         edge_data.values(),
-        key=lambda data: float(
-            data.get("length", math.inf)
-        ),
+        key=lambda data: float(data.get("length", math.inf)),
     )
 
 
@@ -125,7 +125,7 @@ def route_coordinates(graph, route):
                 ),
             ]
 
-        # Ensure the edge geometry follows the route direction.
+        # Ensure coordinates follow the route's direction.
         u_xy = (
             graph.nodes[u]["x"],
             graph.nodes[u]["y"],
@@ -135,14 +135,13 @@ def route_coordinates(graph, route):
             edge_coords[0][1],
             edge_coords[0][0],
         )
+
         last_xy = (
             edge_coords[-1][1],
             edge_coords[-1][0],
         )
 
-        if math.dist(first_xy, u_xy) > math.dist(
-            last_xy, u_xy
-        ):
+        if math.dist(first_xy, u_xy) > math.dist(last_xy, u_xy):
             edge_coords.reverse()
 
         if coordinates and edge_coords:
@@ -162,17 +161,18 @@ def route_coordinates(graph, route):
     return coordinates
 
 
-def calculate_routes(graph, origin, destination, max_routes=4):
+def calculate_routes(graph, origin, destination, max_routes=3):
     start = nearest_node(graph, origin)
     end = nearest_node(graph, destination)
 
     if start == end:
         raise ValueError(
             "The selected points are too close together. "
-            "Please choose points farther apart."
+            "Choose points farther apart."
         )
 
-    # Keep the shortest parallel edge for each directed pair.
+    # Build a directed graph and retain the shortest parallel edge
+    # between each pair of nodes.
     network = nx.DiGraph()
 
     for u, v, data in graph.edges(data=True):
@@ -187,7 +187,8 @@ def calculate_routes(graph, origin, destination, max_routes=4):
 
     if start not in network or end not in network:
         raise ValueError(
-            "A connected road was not found for one of the points."
+            "A connected driving road could not be found "
+            "for one of the selected points."
         )
 
     paths = nx.shortest_simple_paths(
@@ -212,6 +213,7 @@ def calculate_routes(graph, origin, destination, max_routes=4):
                 }
             )
 
+        # Three routes total: shortest + two alternatives.
         if len(results) >= max_routes:
             break
 
@@ -242,10 +244,14 @@ with panel_col:
 
     if st.session_state.click_stage == "origin":
         st.info("Click the map to select your starting point.")
+
     elif st.session_state.click_stage == "destination":
         st.info("Click the map again to select your destination.")
+
     else:
-        st.success("Both points selected. Find your routes below.")
+        st.success(
+            "Both points are selected. Click Find Route below."
+        )
 
     if st.session_state.origin:
         st.write(
@@ -298,12 +304,12 @@ with panel_col:
         try:
             graph = load_road_graph()
 
-            with st.spinner("Calculating alternative routes..."):
+            with st.spinner("Calculating the best three routes..."):
                 st.session_state.route_results = calculate_routes(
                     graph,
                     st.session_state.origin,
                     st.session_state.destination,
-                    max_routes=4,
+                    max_routes=3,
                 )
 
             st.session_state.route_message = (
@@ -328,6 +334,7 @@ with panel_col:
         else:
             st.error(st.session_state.route_message)
 
+
     # ----------------------------------------------
     # DISTANCE COMPARISON
     # ----------------------------------------------
@@ -346,6 +353,7 @@ with panel_col:
         for index, route in enumerate(routes):
             distance = route["distance_km"]
             difference = max(0.0, distance - shortest_km)
+
             percentage = (
                 difference / shortest_km * 100
                 if shortest_km > 0
@@ -353,16 +361,25 @@ with panel_col:
             )
 
             if index == 0:
-                st.markdown("🔴 **Route 1 — Shortest**")
-                st.write(f"Actual route distance: **{distance:.2f} km**")
-                st.write("Difference: **0.00 km (0.0%)**")
-            else:
-                st.markdown(
-                    f"**Route {index + 1} — Alternative**"
-                )
+                st.markdown("🔴 **Route 1 — Shortest route**")
+
                 st.write(
                     f"Actual route distance: **{distance:.2f} km**"
                 )
+
+                st.write(
+                    "Difference from shortest: **0.00 km (0.0%)**"
+                )
+
+            else:
+                st.markdown(
+                    f"**Route {index + 1} — Alternative route**"
+                )
+
+                st.write(
+                    f"Actual route distance: **{distance:.2f} km**"
+                )
+
                 st.write(
                     f"Longer than shortest: **+{difference:.2f} km** "
                     f"({percentage:.1f}%)"
@@ -382,19 +399,16 @@ with map_col:
 
     routes = st.session_state.route_results
 
-    # Draw alternative routes first.
+    # Draw the two alternatives first.
     alternative_colors = [
-        "#2878B5",
-        "#2A9D55",
-        "#8A63B8",
+        "#2878B5",  # Blue
+        "#2A9D55",  # Green
     ]
 
-    for index, route in enumerate(routes[1:]):
+    for index, route in enumerate(routes[1:3]):
         folium.PolyLine(
             route["coords"],
-            color=alternative_colors[
-                index % len(alternative_colors)
-            ],
+            color=alternative_colors[index],
             weight=5,
             opacity=0.9,
             tooltip=(
@@ -403,7 +417,7 @@ with map_col:
             ),
         ).add_to(map_obj)
 
-    # Draw the shortest route last so it stays visible in red.
+    # Draw the shortest route last so it remains visible in red.
     if routes:
         shortest = routes[0]
 
