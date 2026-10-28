@@ -57,7 +57,7 @@ The route calculations are based on road-network distance rather than estimated 
 To run the application on your own computer, first install Python and clone this repository:
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/gis-remote-sensing-portfolio.git
+git clone https://github.com/Kissi77/gis-remote-sensing-portfolio.git
 cd gis-remote-sensing-portfolio
 ```
 
