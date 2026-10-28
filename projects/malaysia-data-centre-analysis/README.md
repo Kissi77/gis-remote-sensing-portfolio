@@ -34,7 +34,16 @@ The research examines how environmental indicators vary with distance from devel
 
 ## Results and Visualisations
 
-Selected maps, figures, and numerical results will be added after they have been checked and approved for public sharing.
+### Annual Dry-Season Environmental Trajectories
+
+The figure below presents annual dry-season trajectories for land-surface temperature (LST), the Normalized Difference Vegetation Index (NDVI), and the Normalized Difference Built-up Index (NDBI) across the study sites. Examining these indicators together helps characterise changes in surface thermal conditions, vegetation, and built-up surface patterns over the study period.
+
+![Annual dry-season trajectories of LST, NDVI, and NDBI](figures/annual-dry-season-trajectories.png)
+
+*Figure 1. Annual dry-season trajectories of LST, NDVI, and NDBI across the study sites in Malaysia. Interpretations should account for interannual climate variability, data availability, and differences in development timing.*
+
+Additional figures will document pre–post changes across distance bands and comparisons between data-centre impact sites and matched controls.
+
 
 Planned outputs include:
 
