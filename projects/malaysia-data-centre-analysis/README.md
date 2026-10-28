@@ -30,6 +30,16 @@ The second approach groups nearby data centres into four clusters and analyses n
 
 Pre-development/post-development changes are assessed for the clusters and standalone sites. BACI analysis is also conducted for eligible units using matched control locations, allowing changes at impact units to be compared with changes in their controls.
 
+### Distance-Band Design and Cluster Coverage
+
+The individual-site analysis used five distance bands: 0–500 m, 500 m–1 km, 1–2 km, 2–3 km, and 3–5 km. These bands were used to examine how environmental indicators varied with distance from each of the 21 data-centre sites.
+
+For the cluster-based analysis, nearby data centres were first grouped using overlapping 500 m buffers, which were dissolved to represent each cluster. A centroid was then calculated for each dissolved cluster. During spatial validation, some data centres were found to lie outside a 500 m buffer around their cluster centroid. The innermost cluster-analysis buffer was therefore increased to 1 km to ensure that all data centres belonging to each cluster were encompassed.
+
+The cluster-based analysis used four distance bands: 0–1 km, 1–2 km, 2–3 km, and 3–4 km. This configuration was adopted to improve spatial coverage of the clustered developments while maintaining a consistent distance-band framework across the cluster-based units.
+
+Because the two approaches use different spatial units and distance-band boundaries, their results are interpreted as complementary analyses rather than directly equivalent measurements at identical distances.
+
 
 
 ## Data and Tools
