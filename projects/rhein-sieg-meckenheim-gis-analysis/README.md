@@ -1,114 +1,108 @@
-# GIS-Based Land Use, Forest Change, and Residential Development Suitability Analysis
+# GIS-Based Land Use, Forest Change, and Multi-Criteria Residential Development Suitability Analysis
 
-**Study Area:** Rhein-Sieg-Kreis and Meckenheim, North Rhine-Westphalia, Germany  
-**Project Area:** Urban Analytics with GIS  
-**Author:** Emmanuel Frimpong Kissi
+**Study Area:** Rhein-Sieg District and Meckenheim, Germany  
+**Author:** Emmanuel Frimpong Kissi  
+**Focus:** GIS · Spatial Analysis · Land-Use Planning · Multi-Criteria Analysis (MCA)
 
-## Project Overview
+## Overview
 
-This project applies Geographic Information Systems (GIS) to explore land use, forest-area change, and potential locations for future residential development in the Rhein-Sieg District of Germany.
+This project applies Geographic Information Systems (GIS) to investigate land-use patterns, historical forest change, residential building land change, and potential locations for future residential development in the Rhein-Sieg District and Meckenheim, North Rhine-Westphalia, Germany.
 
-The project combines spatial mapping, land-use analysis, historical change assessment, and multi-criteria suitability analysis. It aims to demonstrate how GIS can support land-use planning and evidence-based decision-making.
+The project combines spatial mapping and change analysis with a **multi-criteria analysis (MCA)** to identify potential residential development locations based on environmental constraints and accessibility to essential services and public transport.
 
-The analysis covers three main components:
+## Project Highlights
 
 - **Land-use mapping:** Visualisation of land-use and land-cover patterns across the Rhein-Sieg District.
-- **Forest-area change:** Examination of changes in forest areas between 1845 and 2018.
-- **Residential development suitability:** Identification of two potential locations for new residential development in Meckenheim using environmental constraints and accessibility criteria.
+- **Forest change analysis:** Assessment of forest-area change between 1845 and 2018.
+- **Residential change analysis:** Examination of residential building land change in Meckenheim between 2018 and 2022.
+- **Multi-criteria suitability analysis:** Identification of two potential residential development locations in Meckenheim.
 
-## Project Objectives
+## Map Gallery
 
-- Map and visualise land-use patterns across the Rhein-Sieg District.
-- Examine long-term changes in forest areas.
-- Identify potentially suitable locations for residential development in Meckenheim.
-- Apply GIS-based spatial analysis to support land-use planning.
-- Communicate spatial results through clear, map-based outputs.
+### 1. Land-Use Plan — Rhein-Sieg District
 
-## Map Outputs
+Visualisation of the spatial distribution of land-use and land-cover categories across the Rhein-Sieg District.
 
-The following maps present the main outputs of the project. The images are included so that visitors can explore the results directly from this repository.
+![Land-use plan of the Rhein-Sieg District](land-use-plan-rhein-sieg.png)
 
-### 1. Land-Use Plan of the Rhein-Sieg District
+### 2. Forest-Area Change — Rhein-Sieg District, 1845–2018
 
-This map presents the spatial distribution of land-use and land-cover categories across the Rhein-Sieg District. It provides an overview of the landscape and the different land-cover types within the study area.
+Historical comparison of forest areas to examine long-term changes in forest distribution and landscape patterns.
 
-![Land-use plan of the Rhein-Sieg District](images/land-use-plan-rhein-sieg.png)
+![Forest-area change in the Rhein-Sieg District](forest-area-change-rhein-sieg.png)
 
-### 2. Forest-Area Change in the Rhein-Sieg District, 1845–2018
+### 3. Residential Building Land Change — Meckenheim, 2018–2022
 
-This map illustrates the historical change in forest areas across the Rhein-Sieg District between 1845 and 2018. The analysis provides a spatial perspective on long-term landscape transformation.
+Spatial analysis of changes in residential building land in Meckenheim between 2018 and 2022, illustrating patterns of residential development over the study period.
 
-![Forest-area change in the Rhein-Sieg District, 1845–2018](images/forest-area-change-rhein-sieg.png)
+![Residential building land change in Meckenheim](residential-building-land-change-meckenheim.png)
 
-### 3. Potential Residential Development Site 1 — Meckenheim
+### 4. Multi-Criteria Residential Development Suitability — Site 1, Meckenheim
 
-This map shows the first potential location identified through the residential development suitability analysis. The assessment considers spatial constraints and accessibility requirements to identify areas that may warrant further investigation.
+The first potential location identified by combining environmental constraints, land-use exclusions, and accessibility criteria. The result highlights an area for further investigation for possible residential development.
 
-![Potential residential development location 1 in Meckenheim](images/meckenheim-suitable-location-1.png)
+![Potential residential development site 1 in Meckenheim](meckenheim-suitable-location-1.png)
 
-### 4. Potential Residential Development Site 2 — Meckenheim
+### 5. Multi-Criteria Residential Development Suitability — Site 2, Meckenheim
 
-This map presents the second potential location identified by the suitability analysis. Together, the two candidate locations demonstrate how GIS-based criteria can help screen land for possible future residential development.
+The second potential location identified through the suitability assessment. Together, the two candidate locations demonstrate how GIS-based multi-criteria analysis can support preliminary land-use planning.
 
-![Potential residential development location 2 in Meckenheim](images/meckenheim-suitable-location-2.png)
+![Potential residential development site 2 in Meckenheim](meckenheim-suitable-location-2.png)
 
 ## Methodology
 
-### Land-Use Mapping
+### Land-Use and Forest Change
 
-Land-use and land-cover information was used to represent the spatial structure of the Rhein-Sieg District. The mapping provides a basis for understanding the distribution of different landscape categories.
+Land-use and land-cover data were used to map the Rhein-Sieg District. Historical forest datasets were compared to examine forest-area change between 1845 and 2018.
 
-### Forest-Area Change Analysis
+Residential building land datasets for 2018 and 2022 were analysed to investigate changes in Meckenheim's residential landscape.
 
-Historical forest information was examined to assess changes in forest areas between 1845 and 2018. Comparing the historical datasets provides insight into the spatial development of forest cover over time.
+### Multi-Criteria Residential Development Suitability
 
-### Residential Development Suitability Analysis
+A GIS-based multi-criteria analysis was used to screen potential residential development locations in Meckenheim. The assessment considered:
 
-A GIS-based multi-criteria analysis (MCA) was used to identify two potential residential development locations in Meckenheim.
+| Criterion | Applied requirement |
+|---|---|
+| Environmental protection | Exclude protected areas and forests |
+| Existing land use | Exclude existing settlements and traffic areas |
+| Industrial separation | 500 m buffer around industrial areas |
+| Railway accessibility | Within 40 minutes by e-bike |
+| Kindergarten accessibility | Within 15 minutes on foot |
+| Supermarket accessibility | Within 15 minutes by car |
+| Residential proximity | Within 100 m of existing residential areas |
 
-The suitability assessment considered the following types of criteria:
+Two potential locations were identified based on the specified criteria.
 
-- **Environmental and land-use constraints:** Protected areas, forests, existing settlements, and traffic areas.
-- **Industrial-area separation:** A 500-metre buffer around industrial areas.
-- **Public transport accessibility:** Access to a railway station within a 40-minute e-bike travel time.
-- **Kindergarten accessibility:** Access within a 15-minute walking time.
-- **Supermarket accessibility:** Access within a 15-minute driving time.
-- **Proximity to existing residential areas:** Candidate areas within 100 metres of existing residential zones.
+## Data and GIS Techniques
 
-The criteria were combined to screen for locations that met the specified requirements. Two potential locations were identified for further consideration.
+**Data inputs**
+- CORINE Land Cover (CLC5, 2018)
+- Historical forest-area datasets (1845 and 2018)
+- Residential building land datasets (2018 and 2022)
+- OpenStreetMap data for transport networks and essential services
+- Spatial data representing land-use and environmental constraints
 
-*These thresholds represent the criteria used in the analysis; they should not be interpreted as universal planning standards.*
-
-## Tools and Data
-
-The project is based on GIS methods and spatial datasets documented in the accompanying coursework report.
-
-Key data and analytical components include:
-
-- **CORINE Land Cover (CLC5, 2018):** Land-cover mapping.
-- **Historical forest datasets:** Forest-area comparison for 1845–2018.
-- **OpenStreetMap data:** Transport networks and essential services for accessibility analysis.
-- **GIS spatial analysis:** Land-use mapping, buffering, accessibility assessment, and multi-criteria suitability analysis.
-
-The exact software versions and any additional datasets can be documented here if required.
+**GIS techniques**
+- Land-use and land-cover mapping
+- Historical change analysis
+- Spatial buffering and proximity analysis
+- Network-based accessibility analysis
+- Multi-criteria suitability modelling
 
 ## Key Outputs
 
-- Land-use map of the Rhein-Sieg District.
-- Historical forest-area change map for 1845–2018.
-- Two potential residential development locations in Meckenheim.
-- A GIS-based workflow combining environmental constraints and accessibility criteria.
+- Land-use map of the Rhein-Sieg District
+- Forest-area change map for 1845–2018
+- Residential building land change map for Meckenheim, 2018–2022
+- Two potential residential development locations identified through multi-criteria analysis
 
 ## Limitations
 
-- The results depend on the completeness, accuracy, and dates of the spatial datasets used.
-- Accessibility estimates depend on the network data and travel-time assumptions.
-- The identified locations are **potentially suitable areas under the criteria applied**, not confirmed or officially approved development sites.
-- Further investigation would be needed to assess land ownership, detailed site conditions, planning regulations, infrastructure capacity, and other site-specific requirements.
+The findings depend on the quality and temporal consistency of the available spatial datasets, as well as the criteria and thresholds selected for the suitability model. Accessibility estimates are influenced by network data and travel-time assumptions.
+
+The two identified locations should be interpreted as **potentially suitable under the criteria applied**, not as officially approved development sites. Further assessment of planning regulations, land ownership, environmental conditions, infrastructure capacity, and site-specific constraints would be necessary before implementation.
 
 ## Repository Structure
-
-A suggested structure for organising the project is:
 
 ```text
 rhein-sieg-meckenheim-gis-analysis/
@@ -116,21 +110,21 @@ rhein-sieg-meckenheim-gis-analysis/
 ├── images/
 │   ├── land-use-plan-rhein-sieg.png
 │   ├── forest-area-change-rhein-sieg.png
+│   ├── residential-building-land-change-meckenheim.png
 │   ├── meckenheim-suitable-location-1.png
 │   └── meckenheim-suitable-location-2.png
-├── data/                  # Optional: shareable datasets only
-├── scripts/               # Optional: GIS scripts or notebooks
-└── report/                # Optional: project report
+├── data/       # Optional: shareable datasets
+├── scripts/    # Optional: GIS scripts or notebooks
+└── report/     # Optional: project report
 ```
+
+*Update the image paths to match the actual filenames uploaded to the repository.*
 
 ## Conclusion
 
-This project demonstrates how GIS can be used to investigate land-use patterns, assess long-term forest-area change, and identify potential locations for residential development.
-
-By combining spatial data, environmental constraints, and accessibility criteria, the analysis illustrates the value of GIS as a decision-support tool for urban and regional planning.
+This project demonstrates the application of GIS to regional land-use mapping, historical forest change, residential development analysis, and multi-criteria suitability modelling. By integrating environmental constraints and accessibility requirements, it illustrates how spatial analysis can help identify and evaluate potential areas for future residential development.
 
 ---
 
 **Author:** Emmanuel Frimpong Kissi  
-**Focus Areas:** Geographic Information Systems (GIS), Spatial Analysis, Land-Use Planning, Remote Sensing, and Accessibility Analysis
-
+**Specialisation:** GIS, Spatial Analysis, Urban Analytics, and Land-Use Planning
