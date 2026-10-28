@@ -28,25 +28,25 @@ This map illustrates the spatial distribution of land-use and land-cover categor
 
 This map presents historical changes in forest areas across the Rhein-Sieg District between 1845 and 2018, providing a spatial perspective on long-term landscape transformation.
 
-![Forest-area change in the Rhein-Sieg District, 1845–2018](figures/forest-area-change-rhein-sieg-1845-2018.png)
+![Forest-area change in the Rhein-Sieg District, 1845–2018](figures/forest-area-change-rhein-sieg.png)
 
 ### 3. Residential Building Land Change — Meckenheim, 2018–2022
 
 This map examines changes in residential building land in Meckenheim between 2018 and 2022. It illustrates the spatial pattern of change over the study period and provides insight into the evolution of the local built-up environment.
 
-![Residential building land change in Meckenheim, 2018–2022](figures/residential-building-land-change-meckenheim-2018-2022.png)
+![Residential building land change in Meckenheim, 2018–2022](figures/residential-building-land-change-meckenheim.png)
 
 ### 4. Multi-Criteria Residential Development Suitability — Site 1, Meckenheim
 
 This map presents the first potential residential development location identified through the multi-criteria suitability analysis. The assessment combines land-use constraints and accessibility requirements to identify an area for further investigation.
 
-![Potential residential development site 1 in Meckenheim](figures/residential-suitability-site-1-meckenheim.png)
+![Potential residential development site 1 in Meckenheim](figures/residential-suitability-site-1.png)
 
 ### 5. Multi-Criteria Residential Development Suitability — Site 2, Meckenheim
 
 This map presents the second potential location identified through the suitability assessment. Together, the two candidate locations demonstrate how GIS-based multi-criteria analysis can support preliminary screening for future residential development.
 
-![Potential residential development site 2 in Meckenheim](figures/residential-suitability-site-2-meckenheim.png)
+![Potential residential development site 2 in Meckenheim](figures/residential-suitability-site-2.png)
 
 ## Approach and Methods
 
