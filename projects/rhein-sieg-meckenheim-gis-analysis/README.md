@@ -1,7 +1,6 @@
 # GIS-Based Land Use, Forest Change, and Multi-Criteria Residential Development Suitability Analysis
 
 **Study Area:** Rhein-Sieg District and Meckenheim, Germany  
-**Author:** Emmanuel Frimpong Kissi  
 **Focus:** GIS · Spatial Analysis · Land-Use Planning · Multi-Criteria Analysis (MCA)
 
 ## Overview
@@ -102,29 +101,10 @@ The findings depend on the quality and temporal consistency of the available spa
 
 The two identified locations should be interpreted as **potentially suitable under the criteria applied**, not as officially approved development sites. Further assessment of planning regulations, land ownership, environmental conditions, infrastructure capacity, and site-specific constraints would be necessary before implementation.
 
-## Repository Structure
-
-```text
-rhein-sieg-meckenheim-gis-analysis/
-├── README.md
-├── images/
-│   ├── land-use-plan-rhein-sieg.png
-│   ├── forest-area-change-rhein-sieg.png
-│   ├── residential-building-land-change-meckenheim.png
-│   ├── meckenheim-suitable-location-1.png
-│   └── meckenheim-suitable-location-2.png
-├── data/       # Optional: shareable datasets
-├── scripts/    # Optional: GIS scripts or notebooks
-└── report/     # Optional: project report
-```
-
-*Update the image paths to match the actual filenames uploaded to the repository.*
-
 ## Conclusion
 
 This project demonstrates the application of GIS to regional land-use mapping, historical forest change, residential development analysis, and multi-criteria suitability modelling. By integrating environmental constraints and accessibility requirements, it illustrates how spatial analysis can help identify and evaluate potential areas for future residential development.
 
 ---
-
-**Author:** Emmanuel Frimpong Kissi  
+ 
 **Specialisation:** GIS, Spatial Analysis, Urban Analytics, and Land-Use Planning
