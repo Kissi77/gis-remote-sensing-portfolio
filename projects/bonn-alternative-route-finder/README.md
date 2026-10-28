@@ -12,7 +12,7 @@ The application provides a simple, interactive interface for exploring road conn
 
 Explore alternative driving routes interactively in Bonn, Germany.
 
-![Bonn Interactive Alternative Route Finder displaying alternative driving routes on an interactive map](route-finder-screenshot.png)
+![Bonn Interactive Alternative Route Finder displaying alternative driving routes on an interactive map](route-finder-screenshot2.png)
 
 **[Launch the Live Application](https://gis-remote-sensing-portfolio-husfpsxfrr6klhchenfr2z.streamlit.app/)**
 
