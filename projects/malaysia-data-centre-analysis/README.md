@@ -6,14 +6,31 @@ This project investigates spatial patterns in land-surface temperature, vegetati
 
 The research examines how environmental indicators vary with distance from development sites and compares selected pre-development and post-development observations. Conventional urban and planned eco-city locations provide additional descriptive context.
 
+
 ## Research Objectives
 
-- Examine land-surface temperature (LST) patterns around multiple data-centre sites.
-- Assess vegetation patterns using the Normalized Difference Vegetation Index (NDVI).
-- Examine built-up surface patterns using the Normalized Difference Built-up Index (NDBI).
-- Compare environmental indicators across distance bands.
-- Evaluate pre-development and post-development changes using satellite-derived indicators.
-- Apply Before–After–Control–Impact (BACI) analysis to selected sites with matched controls.
+- Assess land-surface temperature (LST), vegetation patterns (NDVI), and built-up surface patterns (NDBI) around data-centre developments in Malaysia.
+- Examine environmental indicator changes across distance bands around 21 individual data-centre sites.
+- Evaluate an alternative spatial approach that groups nearby data centres into four clusters while retaining nine standalone sites.
+- Compare pre-development and post-development environmental indicators under both spatial approaches.
+- Apply Before–After–Control–Impact (BACI) analysis to eligible clusters and standalone sites using matched controls.
+- Examine how spatial grouping influences the interpretation of observed environmental changes.
+
+## Spatial Analysis Framework
+
+### Approach 1: Individual Analysis of 21 Data-Centre Sites
+
+The first approach treats the 21 data-centre sites individually. Environmental indicators are summarised across distance bands to examine spatial patterns and pre-development/post-development changes in land-surface temperature, vegetation, and built-up surface characteristics.
+
+This approach provides a multisite assessment of variation among individual data-centre locations and their surrounding areas.
+
+### Approach 2: Cluster-Based and Standalone-Site Analysis
+
+The second approach groups nearby data centres into four clusters and analyses nine additional data centres as standalone sites. This spatial arrangement accounts for the proximity of neighbouring developments and the potential overlap of their surrounding areas.
+
+Pre-development/post-development changes are assessed for the clusters and standalone sites. BACI analysis is also conducted for eligible units using matched control locations, allowing changes at impact units to be compared with changes in their controls.
+
+
 
 ## Data and Tools
 
@@ -26,11 +43,13 @@ The research examines how environmental indicators vary with distance from devel
 
 1. Prepare satellite observations and apply cloud and quality masking.
 2. Generate seasonal image composites for the relevant study periods.
-3. Derive land-surface temperature and calculate NDVI and NDBI where the required imagery is available.
-4. Summarise indicators across distance bands around the study sites.
-5. Compare selected pre-development and post-development periods.
-6. Conduct BACI analysis for eligible impact and matched-control units.
-7. Interpret the results while considering data availability, environmental variability, and limitations of causal attribution.
+3. Derive land-surface temperature and calculate NDVI and NDBI where suitable imagery is available.
+4. Conduct distance-band and pre–post analyses for the 21 individual data-centre sites.
+5. Group nearby data centres into four clusters and retain nine standalone sites for the alternative spatial analysis.
+6. Assess pre–post changes for the cluster-based and standalone-site units.
+7. Conduct BACI comparisons for eligible impact units and matched controls.
+8. Interpret results in light of observation availability, spatial dependence, environmental variability, and uncertainty in causal attribution.
+
 
 ## Results and Visualisations
 
