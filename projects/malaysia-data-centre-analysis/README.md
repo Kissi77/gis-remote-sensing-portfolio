@@ -24,6 +24,24 @@ The first approach treats the 21 data-centre sites individually. Environmental i
 
 This approach provides a multisite assessment of variation among individual data-centre locations and their surrounding areas.
 
+
+#### Annual Trajectories
+
+The annual dry-season trajectories provide a temporal overview of land-surface temperature (LST), vegetation (NDVI), and built-up surface patterns (NDBI) across the 21 individual data-centre sites.
+
+![Annual dry-season trajectories across 21 individual data-centre sites](figures/annual-dry-season-trajectories.png)
+
+#### Pre–Post Changes Across Five Distance Rings
+
+This analysis examines pre-development and post-development changes in LST, NDVI, and NDBI across five distance rings around the individual data-centre sites: 0–500 m, 500 m–1 km, 1–2 km, 2–3 km, and 3–5 km.
+
+![Pre-post environmental changes across five distance rings around individual data-centre sites](figures/individual-site-pre-post-distance-bands.png)
+
+*Interpretation note: These results describe observed changes across distance rings. They do not independently establish that data-centre development caused the changes.*
+
+
+
+
 ### Approach 2: Cluster-Based and Standalone-Site Analysis
 
 The second approach groups nearby data centres into four clusters and analyses nine additional data centres as standalone sites. This spatial arrangement accounts for the proximity of neighbouring developments and the potential overlap of their surrounding areas.
