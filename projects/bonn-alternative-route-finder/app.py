@@ -1,6 +1,6 @@
 
-import hashlib
-from itertools import islice
+import itertools
+import math
 
 import folium
 import networkx as nx
@@ -10,17 +10,8 @@ from streamlit_folium import st_folium
 
 
 # ============================================================
-# BONN INTERACTIVE ALTERNATIVE ROUTE FINDER
+# 1. APPLICATION SETTINGS
 # ============================================================
-
-PLACE = "Bonn, North Rhine-Westphalia, Germany"
-
-N_ALTERNATIVES = 2
-MAX_STRETCH = 1.35
-MAX_SHARED = 0.85
-MAX_CANDIDATES = 300
-
-ROUTE_COLOURS = ["red", "blue", "green"]
 
 st.set_page_config(
     page_title="Bonn Alternative Route Finder",
@@ -28,500 +19,549 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("Bonn Interactive Alternative Route Finder")
+MAX_ROUTE_STRETCH = 1.35
+MAX_SHARED_ROUTE = 0.85
+MAX_CANDIDATE_PATHS = 300
+MAX_ROUTES = 3
 
-st.write(
-    "Select an origin and destination by clicking the map. "
-    "Calculate the shortest-distance driving route and explore "
-    "up to two alternative routes."
-)
-
-st.caption(
-    "Routing objective: shortest distance. Road network: OpenStreetMap."
-)
+ROUTE_COLORS = ["blue", "green"]
 
 
 # ============================================================
-# 1. LOAD BONN'S DRIVING ROAD NETWORK
+# 2. LOAD BONN'S DRIVING NETWORK
 # ============================================================
 
 @st.cache_resource(show_spinner="Loading Bonn's road network...")
-def load_graph():
-
-    G = ox.graph_from_place(
-        PLACE,
+def load_road_network():
+    """
+    Download the Bonn driving network and convert it to a
+    directed graph. For parallel edges, retain the shortest
+    edge between each pair of nodes.
+    """
+    graph = ox.graph_from_place(
+        "Bonn, North Rhine-Westphalia, Germany",
         network_type="drive",
         simplify=True,
     )
 
-    G = ox.distance.add_edge_lengths(G)
+    graph = ox.add_edge_lengths(graph)
 
-    # Convert MultiDiGraph to DiGraph because
-    # shortest_simple_paths does not support MultiDiGraph.
-    H = nx.DiGraph()
-    H.graph.update(G.graph)
-    H.add_nodes_from(G.nodes(data=True))
+    directed_graph = nx.DiGraph()
 
-    for u, v, data in G.edges(data=True):
+    directed_graph.add_nodes_from(
+        (node, attributes.copy())
+        for node, attributes in graph.nodes(data=True)
+    )
 
-        length = data.get("length")
+    for u, v, key, attributes in graph.edges(
+        keys=True, data=True
+    ):
+        edge_attributes = attributes.copy()
 
-        if length is None:
-            continue
-
-        if (
-            not H.has_edge(u, v)
-            or length < H[u][v]["length"]
+        if not directed_graph.has_edge(u, v):
+            directed_graph.add_edge(
+                u, v, **edge_attributes
+            )
+        elif (
+            edge_attributes.get("length", float("inf"))
+            < directed_graph[u][v].get(
+                "length", float("inf")
+            )
         ):
-            H.add_edge(u, v, **dict(data))
+            directed_graph[u][v].clear()
+            directed_graph[u][v].update(edge_attributes)
 
-    return H
+    return directed_graph
 
 
 # ============================================================
-# 2. ROUTING HELPER FUNCTIONS
+# 3. FIND THE SHORTEST ROUTE AND ALTERNATIVES
 # ============================================================
 
-def route_distance(G, path):
-
+def route_distance(graph, path):
+    """Calculate route length in metres."""
     return sum(
-        G[u][v]["length"]
+        graph[u][v].get("length", 0)
         for u, v in zip(path[:-1], path[1:])
     )
 
 
-def route_edges(path):
+def find_routes(graph, origin_node, destination_node):
+    """
+    Return the shortest-distance route and up to two
+    alternatives.
 
-    return set(zip(path[:-1], path[1:]))
+    Alternatives must be within the maximum detour threshold
+    and must not overlap too heavily with the shortest route.
+    """
+    if origin_node == destination_node:
+        return []
+
+    try:
+        candidates = nx.shortest_simple_paths(
+            graph,
+            origin_node,
+            destination_node,
+            weight="length",
+        )
+
+        selected_routes = []
+        shortest_distance = None
+        shortest_edges = set()
+
+        for path in itertools.islice(
+            candidates, MAX_CANDIDATE_PATHS
+        ):
+            distance = route_distance(graph, path)
+
+            if distance <= 0:
+                continue
+
+            if not selected_routes:
+                shortest_distance = distance
+                shortest_edges = set(
+                    zip(path[:-1], path[1:])
+                )
+
+                selected_routes.append(
+                    {"path": path, "distance": distance}
+                )
+                continue
+
+            # Ignore routes that are excessively longer.
+            if distance > shortest_distance * MAX_ROUTE_STRETCH:
+                continue
+
+            alternative_edges = set(
+                zip(path[:-1], path[1:])
+            )
+
+            shared_ratio = (
+                len(shortest_edges & alternative_edges)
+                / max(len(shortest_edges), 1)
+            )
+
+            if shared_ratio >= MAX_SHARED_ROUTE:
+                continue
+
+            selected_routes.append(
+                {"path": path, "distance": distance}
+            )
+
+            if len(selected_routes) >= MAX_ROUTES:
+                break
+
+        return selected_routes
+
+    except (nx.NetworkXNoPath, nx.NodeNotFound):
+        return []
 
 
-def shared_edge_ratio(candidate, shortest):
+# ============================================================
+# 4. CONVERT A ROUTE INTO MAP COORDINATES
+# ============================================================
 
-    reference_edges = route_edges(shortest)
-    candidate_edges = route_edges(candidate)
-
-    if not reference_edges:
-        return 1.0
-
-    return (
-        len(reference_edges & candidate_edges)
-        / len(reference_edges)
-    )
-
-
-def edge_coordinates(G, u, v):
-    """Return actual road geometry as latitude-longitude pairs."""
-
-    ux, uy = G.nodes[u]["x"], G.nodes[u]["y"]
-    vx, vy = G.nodes[v]["x"], G.nodes[v]["y"]
-
-    geometry = G[u][v].get("geometry")
-
-    if geometry is None:
-        return [(uy, ux), (vy, vx)]
-
-    coords = list(geometry.coords)
-
-    if len(coords) < 2:
-        return [(uy, ux), (vy, vx)]
-
-    start, end = coords[0], coords[-1]
-
-    forward_error = (
-        (start[0] - ux) ** 2
-        + (start[1] - uy) ** 2
-        + (end[0] - vx) ** 2
-        + (end[1] - vy) ** 2
-    )
-
-    reverse_error = (
-        (end[0] - ux) ** 2
-        + (end[1] - uy) ** 2
-        + (start[0] - vx) ** 2
-        + (start[1] - vy) ** 2
-    )
-
-    if reverse_error < forward_error:
-        coords.reverse()
-
-    return [(lat, lon) for lon, lat in coords]
-
-
-def route_geometry(G, path):
-
+def route_coordinates(graph, path):
+    """
+    Convert graph edges into Folium coordinates (latitude,
+    longitude), preserving road geometries when available.
+    """
     coordinates = []
 
     for u, v in zip(path[:-1], path[1:]):
+        start_node = graph.nodes[u]
+        end_node = graph.nodes[v]
 
-        segment = edge_coordinates(G, u, v)
+        start_xy = (
+            start_node["x"],
+            start_node["y"],
+        )
+        end_xy = (
+            end_node["x"],
+            end_node["y"],
+        )
 
-        if not coordinates:
-            coordinates.extend(segment)
+        edge = graph[u][v]
+        geometry = edge.get("geometry")
 
-        elif coordinates[-1] == segment[0]:
-            coordinates.extend(segment[1:])
+        if geometry is not None:
+            edge_coords = list(geometry.coords)
+
+            # Ensure the geometry follows the route direction.
+            first_xy = edge_coords[0]
+            last_xy = edge_coords[-1]
+
+            forward_error = (
+                math.dist(first_xy, start_xy)
+                + math.dist(last_xy, end_xy)
+            )
+
+            reverse_error = (
+                math.dist(last_xy, start_xy)
+                + math.dist(first_xy, end_xy)
+            )
+
+            if reverse_error < forward_error:
+                edge_coords.reverse()
+
+            segment = [
+                (lat, lon)
+                for lon, lat in edge_coords
+            ]
 
         else:
-            coordinates.extend(segment)
+            segment = [
+                (start_xy[1], start_xy[0]),
+                (end_xy[1], end_xy[0]),
+            ]
+
+        for coordinate in segment:
+            if (
+                not coordinates
+                or coordinate != coordinates[-1]
+            ):
+                coordinates.append(coordinate)
 
     return coordinates
 
 
 # ============================================================
-# 3. CALCULATE SHORTEST ROUTE AND ALTERNATIVES
+# 5. APPLICATION HEADER
 # ============================================================
 
-def calculate_routes(G, origin, destination):
+st.title("🗺️ Bonn Interactive Alternative Route Finder")
 
-    source = ox.distance.nearest_nodes(
-        G,
-        X=origin[1],
-        Y=origin[0],
-    )
-
-    target = ox.distance.nearest_nodes(
-        G,
-        X=destination[1],
-        Y=destination[0],
-    )
-
-    if source == target:
-        raise ValueError(
-            "Both locations snapped to the same road node. "
-            "Choose locations farther apart."
-        )
-
-    if not nx.has_path(G, source, target):
-        raise nx.NetworkXNoPath(
-            "No driving route exists between these locations."
-        )
-
-    path_generator = nx.shortest_simple_paths(
-        G,
-        source,
-        target,
-        weight="length",
-    )
-
-    shortest = next(path_generator)
-    shortest_distance = route_distance(G, shortest)
-
-    routes = [{
-        "name": "Shortest route",
-        "path": shortest,
-        "distance": shortest_distance,
-        "stretch": 1.0,
-        "overlap": 1.0,
-        "colour": ROUTE_COLOURS[0],
-    }]
-
-    for candidate in islice(
-        path_generator,
-        MAX_CANDIDATES,
-    ):
-
-        distance = route_distance(G, candidate)
-
-        if shortest_distance <= 0:
-            continue
-
-        stretch = distance / shortest_distance
-        overlap = shared_edge_ratio(candidate, shortest)
-
-        if (
-            stretch <= MAX_STRETCH
-            and overlap < MAX_SHARED
-        ):
-
-            index = len(routes)
-
-            routes.append({
-                "name": f"Alternative {index}",
-                "path": candidate,
-                "distance": distance,
-                "stretch": stretch,
-                "overlap": overlap,
-                "colour": ROUTE_COLOURS[index],
-            })
-
-        if len(routes) >= 1 + N_ALTERNATIVES:
-            break
-
-    return routes
-
-
-# ============================================================
-# 4. SESSION STATE
-# ============================================================
-
-defaults = {
-    "origin": None,
-    "destination": None,
-    "last_click": None,
-    "routes": None,
-    "route_error": None,
-}
-
-for key, value in defaults.items():
-
-    if key not in st.session_state:
-        st.session_state[key] = value
-
-
-def reset_selection():
-
-    st.session_state.origin = None
-    st.session_state.destination = None
-    st.session_state.last_click = None
-    st.session_state.routes = None
-    st.session_state.route_error = None
-
-
-# ============================================================
-# 5. BUILD INTERACTIVE MAP
-# ============================================================
-
-def build_map():
-
-    map_object = folium.Map(
-        location=[50.7374, 7.0982],
-        zoom_start=13,
-        control_scale=True,
-        tiles="OpenStreetMap",
-    )
-
-    if st.session_state.origin is not None:
-
-        folium.Marker(
-            st.session_state.origin,
-            tooltip="Origin",
-            popup="Origin",
-            icon=folium.Icon(
-                color="green",
-                icon="play",
-            ),
-        ).add_to(map_object)
-
-    if st.session_state.destination is not None:
-
-        folium.Marker(
-            st.session_state.destination,
-            tooltip="Destination",
-            popup="Destination",
-            icon=folium.Icon(
-                color="darkred",
-                icon="flag",
-            ),
-        ).add_to(map_object)
-
-    if st.session_state.routes:
-
-        G = load_graph()
-
-        for route in st.session_state.routes:
-
-            coordinates = route_geometry(
-                G,
-                route["path"],
-            )
-
-            folium.PolyLine(
-                locations=coordinates,
-                color=route["colour"],
-                weight=3,
-                opacity=1.0,
-                tooltip=(
-                    f"{route['name']} — "
-                    f"{route['distance'] / 1000:.2f} km"
-                ),
-            ).add_to(map_object)
-
-    return map_object
-
-
-# ============================================================
-# 6. MAP SELECTION
-# ============================================================
+st.write(
+    "Select an origin and destination on the map to "
+    "calculate the shortest-distance driving route and "
+    "explore alternative routes in Bonn, Germany."
+)
 
 st.info(
-    "Click once to select the origin and again to select "
-    "the destination. A third click starts a new selection."
+    "Click once to set your origin and a second time to "
+    "set your destination. A third click starts a new "
+    "journey. Routes are optimized by distance, not live "
+    "travel time."
 )
 
-map_data = st_folium(
-    build_map(),
-    height=600,
-    key="bonn_route_map",
-    returned_objects=["last_clicked"],
+with st.expander("How to use the map"):
+    st.markdown(
+        """
+        1. Click a location on the map to select the origin.
+        2. Click another location to select the destination.
+        3. Compare the shortest route with available alternatives.
+        4. Click again to begin another journey.
+        """
+    )
+
+
+# ============================================================
+# 6. SESSION STATE
+# ============================================================
+
+if "origin" not in st.session_state:
+    st.session_state.origin = None
+
+if "destination" not in st.session_state:
+    st.session_state.destination = None
+
+if "last_processed_click" not in st.session_state:
+    st.session_state.last_processed_click = None
+
+
+# ============================================================
+# 7. LOAD GRAPH AND PREPARE MAP
+# ============================================================
+
+try:
+    G = load_road_network()
+
+except Exception as error:
+    st.error(
+        "The Bonn road network could not be loaded. "
+        "Please refresh the application and try again."
+    )
+
+    with st.expander("Technical details"):
+        st.code(str(error))
+
+    st.stop()
+
+
+bonn_center = [50.7374, 7.0982]
+
+route_map = folium.Map(
+    location=bonn_center,
+    zoom_start=12,
+    tiles="OpenStreetMap",
+    control_scale=True,
 )
 
-clicked = map_data.get("last_clicked") if map_data else None
+folium.Marker(
+    bonn_center,
+    tooltip="Bonn, Germany",
+    icon=folium.Icon(color="cadetblue", icon="info-sign"),
+).add_to(route_map)
 
-if clicked and "lat" in clicked and "lng" in clicked:
 
-    lat = round(float(clicked["lat"]), 6)
-    lon = round(float(clicked["lng"]), 6)
+# ============================================================
+# 8. PROCESS ORIGIN AND DESTINATION
+# ============================================================
 
-    signature = hashlib.sha1(
-        f"{lat},{lon}".encode()
-    ).hexdigest()
+# st_folium returns the most recent map click.
+# Only process a click when its coordinates have changed.
 
-    if signature != st.session_state.last_click:
+# Routes are calculated below, after a destination is selected.
+# The map is displayed again after route layers are added.
 
-        st.session_state.last_click = signature
-        st.session_state.routes = None
-        st.session_state.route_error = None
 
-        point = (lat, lon)
+# ============================================================
+# 9. SNAP LOCATIONS TO THE ROAD NETWORK
+# ============================================================
 
-        if st.session_state.origin is None:
+def nearest_road_node(graph, location):
+    """Find the nearest graph node to a clicked map location."""
+    latitude, longitude = location
 
-            st.session_state.origin = point
+    return ox.distance.nearest_nodes(
+        graph,
+        X=longitude,
+        Y=latitude,
+    )
 
-        elif st.session_state.destination is None:
 
-            st.session_state.destination = point
+# ============================================================
+# 10. DRAW ROUTES
+# ============================================================
+
+def add_route_to_map(
+    route_map,
+    graph,
+    route,
+    color,
+    weight,
+    label,
+    show_on_top=False,
+):
+    """Draw one route using its road geometry."""
+    coordinates = route_coordinates(
+        graph, route["path"]
+    )
+
+    if len(coordinates) < 2:
+        return
+
+    folium.PolyLine(
+        locations=coordinates,
+        color=color,
+        weight=weight,
+        opacity=1.0,
+        tooltip=(
+            f"{label}: "
+            f"{route['distance'] / 1000:.2f} km"
+        ),
+        smooth_factor=1,
+    ).add_to(route_map)
+
+
+# ============================================================
+# 11. MAP DISPLAY AND CLICK HANDLING
+# ============================================================
+
+# Add origin and destination markers, when available.
+
+if st.session_state.origin is not None:
+    folium.Marker(
+        st.session_state.origin,
+        tooltip="Origin",
+        popup="Origin",
+        icon=folium.Icon(color="green", icon="play"),
+    ).add_to(route_map)
+
+if st.session_state.destination is not None:
+    folium.Marker(
+        st.session_state.destination,
+        tooltip="Destination",
+        popup="Destination",
+        icon=folium.Icon(color="darkred", icon="flag"),
+    ).add_to(route_map)
+
+
+# Calculate routes if both locations have been selected.
+
+routes = []
+
+if (
+    st.session_state.origin is not None
+    and st.session_state.destination is not None
+):
+    try:
+        origin_node = nearest_road_node(
+            G, st.session_state.origin
+        )
+
+        destination_node = nearest_road_node(
+            G, st.session_state.destination
+        )
+
+        routes = find_routes(
+            G, origin_node, destination_node
+        )
+
+        if not routes:
+            st.warning(
+                "No suitable route was found between these "
+                "locations. Try selecting different points."
+            )
 
         else:
+            # Draw alternatives FIRST, so the shortest route
+            # will be drawn last and remain visible on overlaps.
 
-            st.session_state.origin = point
+            for index, route in enumerate(routes[1:]):
+                color = ROUTE_COLORS[
+                    index % len(ROUTE_COLORS)
+                ]
+
+                add_route_to_map(
+                    route_map,
+                    G,
+                    route,
+                    color=color,
+                    weight=4,
+                    label=f"Alternative {index + 1}",
+                )
+
+            # Draw the shortest route LAST, in red.
+            # The thicker line helps it stand out where routes
+            # share the same road segments.
+
+            add_route_to_map(
+                route_map,
+                G,
+                routes[0],
+                color="red",
+                weight=7,
+                label="Shortest route",
+                show_on_top=True,
+            )
+
+    except Exception as error:
+        st.error(
+            "An error occurred while calculating the routes."
+        )
+
+        with st.expander("Technical details"):
+            st.code(str(error))
+
+
+# ============================================================
+# 12. DISPLAY THE MAP
+# ============================================================
+
+map_output = st_folium(
+    route_map,
+    height=620,
+    use_container_width=True,
+    returned_objects=["last_clicked"],
+    key="bonn_route_map",
+)
+
+clicked = map_output.get("last_clicked")
+
+if clicked:
+    click_location = (
+        round(clicked["lat"], 6),
+        round(clicked["lng"], 6),
+    )
+
+    if click_location != st.session_state.last_processed_click:
+        st.session_state.last_processed_click = click_location
+
+        if st.session_state.origin is None:
+            st.session_state.origin = click_location
+            st.session_state.destination = None
+
+        elif st.session_state.destination is None:
+            st.session_state.destination = click_location
+
+        else:
+            # Third click: start a new journey.
+            st.session_state.origin = click_location
             st.session_state.destination = None
 
         st.rerun()
 
 
 # ============================================================
-# 7. SHOW SELECTED LOCATIONS
+# 13. ROUTE COMPARISON
 # ============================================================
 
-col1, col2 = st.columns(2)
+if routes:
+    st.subheader("Route Comparison")
 
-with col1:
-
-    st.write("**Origin**")
-
-    st.write(
-        st.session_state.origin
-        if st.session_state.origin
-        else "Not selected"
-    )
-
-with col2:
-
-    st.write("**Destination**")
-
-    st.write(
-        st.session_state.destination
-        if st.session_state.destination
-        else "Not selected"
-    )
-
-
-# ============================================================
-# 8. ROUTE CONTROLS
-# ============================================================
-
-col_button, col_reset = st.columns([2, 1])
-
-with col_button:
-
-    calculate = st.button(
-        "Calculate routes",
-        type="primary",
-        use_container_width=True,
-        disabled=not (
-            st.session_state.origin
-            and st.session_state.destination
-        ),
-    )
-
-with col_reset:
-
-    st.button(
-        "Reset selection",
-        on_click=reset_selection,
-        use_container_width=True,
-    )
-
-
-if calculate:
-
-    try:
-
-        G = load_graph()
-
-        with st.spinner("Calculating routes..."):
-
-            st.session_state.routes = calculate_routes(
-                G,
-                st.session_state.origin,
-                st.session_state.destination,
-            )
-
-        st.session_state.route_error = None
-        st.rerun()
-
-    except Exception as error:
-
-        st.session_state.routes = None
-        st.session_state.route_error = str(error)
-
-
-if st.session_state.route_error:
-
-    st.error(st.session_state.route_error)
-
-
-# ============================================================
-# 9. ROUTE COMPARISON
-# ============================================================
-
-if st.session_state.routes:
-
-    routes = st.session_state.routes
-
-    st.subheader("Route comparison")
+    shortest_distance = routes[0]["distance"]
 
     columns = st.columns(len(routes))
 
-    for column, route in zip(columns, routes):
+    for index, route in enumerate(routes):
+        distance_km = route["distance"] / 1000
 
-        with column:
+        if index == 0:
+            title = "🔴 Shortest Route"
+            detour = 0.0
 
+        else:
+            title = f"Alternative {index}"
             detour = (
-                None
-                if route["name"] == "Shortest route"
-                else f"{(route['stretch'] - 1) * 100:.1f}% longer"
-            )
+                (route["distance"] - shortest_distance)
+                / shortest_distance
+            ) * 100
+
+        with columns[index]:
+            st.markdown(f"**{title}**")
 
             st.metric(
-                route["name"],
-                f"{route['distance'] / 1000:.2f} km",
-                delta=detour,
+                label="Road distance",
+                value=f"{distance_km:.2f} km",
             )
 
-            if route["name"] != "Shortest route":
-
-                st.caption(
-                    "Shared road edges: "
-                    f"{route['overlap'] * 100:.1f}%"
-                )
+            if index == 0:
+                st.caption("Shortest-distance option")
+            else:
+                st.caption(f"{detour:.1f}% longer than shortest")
 
     st.caption(
-        "Alternative routes are limited to a maximum 35% detour "
-        "and less than 85% overlap with the shortest route. "
-        "Some journeys may have fewer than two qualifying alternatives."
+        "Distances are calculated from the mapped road network. "
+        "They are not live travel-time estimates."
     )
 
 
 # ============================================================
-# 10. ATTRIBUTION AND LIMITATIONS
+# 14. SELECTED LOCATIONS AND DATA ATTRIBUTION
 # ============================================================
+
+with st.expander("Selected coordinates"):
+    if st.session_state.origin is not None:
+        st.write(
+            "Origin (latitude, longitude):",
+            st.session_state.origin,
+        )
+
+    if st.session_state.destination is not None:
+        st.write(
+            "Destination (latitude, longitude):",
+            st.session_state.destination,
+        )
 
 st.divider()
 
 st.caption(
-    "Map data © OpenStreetMap contributors. "
-    "This demonstration optimizes distance, not travel time, "
-    "live traffic, road closures, or accessibility."
+    "Road network data © OpenStreetMap contributors. "
+    "Routing uses OSMnx and NetworkX."
+)
+
+st.caption(
+    "This application does not include live traffic, "
+    "temporary road closures, or travel-time optimization."
 )
